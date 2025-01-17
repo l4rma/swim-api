@@ -1,19 +1,13 @@
 # swim-api
 A Rest API written in Go
 
-## Usage
-```bash
-# Clone repository
-git clone https://github.com/l4rma/swim-api.git
-
-# Compile code
-make build
-
-# Run API
-make run
+### Usage
+- Clone repository: ``git clone https://github.com/l4rma/swim-api.git``
+- Compile code: ``make build``
+- Run API: ``make run``
 ```
 
-### Example requests
+#### Example requests
 ```bash
 # Add swimmer
 curl localhost:8080/swimmers/add -H "application/json" -d '{"name":"Lars","age":35}'
@@ -21,14 +15,14 @@ curl localhost:8080/swimmers/add -H "application/json" -d '{"name":"Lars","age":
 curl localhost:8080/swimmers | jq
 ```
 
-## Todo:
+### Todo:
 - [x] Create MVP with inmemory DB
 - [ ] Add controller for update function
 - [ ] Add a repository layer for a SQL db
 - [ ] Make serverless with lambda and aurora db
 
-## Tables
-### Swimmers
+### Tables
+#### Swimmers
 
 | Field Name | Type        | Description                            |
 |------------|-------------|----------------------------------------|
@@ -38,7 +32,7 @@ curl localhost:8080/swimmers | jq
 | `CreatedAt`| `time.Time` | Timestamp when the swimmer was created.|
 | `IsActive` | `bool`      | Indicates if the swimmer is active.    |
 
-### Sessions
+#### Sessions
 
 | Field Name | Type        | Description                                   |
 |------------|-------------|-----------------------------------------------|
