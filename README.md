@@ -5,7 +5,6 @@ A Rest API written in Go
 - Clone repository: ``git clone https://github.com/l4rma/swim-api.git``
 - Compile code: ``make build``
 - Run API: ``make run``
-```
 
 #### Example requests
 ```bash
