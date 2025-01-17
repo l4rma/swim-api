@@ -1,6 +1,26 @@
 # swim-api
 A Rest API written in Go
 
+## Usage
+```bash
+# Clone repository
+git clone https://github.com/l4rma/swim-api.git
+
+# Compile code
+make build
+
+# Run API
+make run
+```
+
+### Example requests
+```bash
+# Add swimmer
+curl localhost:8080/swimmers/add -H "application/json" -d '{"name":"Lars","age":35}'
+# Get all swimmers
+curl localhost:8080/swimmers | jq
+```
+
 ## Todo:
 - [x] Create MVP with inmemory DB
 - [ ] Add controller for update function
