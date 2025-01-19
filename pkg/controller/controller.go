@@ -19,6 +19,7 @@ var (
 func HandleRequest() {
 	http.HandleFunc("/swimmers", h.FindAllSwimmers)      // GET
 	http.HandleFunc("/swimmers/add", h.AddSwimmer)       // POST
+	http.HandleFunc("/swimmers/update", h.UpdateSwimmer) // PUT
 	http.HandleFunc("/swimmers/delete", h.DeleteSwimmer) // DELETE
 	http.HandleFunc("/swimmers/find", h.FindSwimmerByID) // GET
 	http.HandleFunc("/sessions", h.FindAllSessions)      // GET
@@ -26,7 +27,8 @@ func HandleRequest() {
 	http.HandleFunc("/sessions/delete", h.DeleteSession) // DELETE
 	http.HandleFunc("/sessions/find", h.FindSessionByID) // GET
 
-	log.Println("Server running at localhost:8080")
 	// Start server
-	http.ListenAndServe(":8080", nil)
+	port := ":8080"
+	log.Printf("Starting server on localhost%s", port)
+	log.Fatal(http.ListenAndServe(port, nil))
 }

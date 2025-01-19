@@ -149,3 +149,21 @@ func (h *Handler) DeleteSession(w http.ResponseWriter, r *http.Request) {
 	}
 	w.WriteHeader(http.StatusNoContent)
 }
+
+func (h *Handler) UpdateSwimmer(w http.ResponseWriter, r *http.Request) {
+	var request struct {
+		ID   string `json:"id"`
+		Name string `json:"name"`
+		Age  int    `json:"age"`
+	}
+	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
+		http.Error(w, "Invalid input", http.StatusBadRequest)
+		return
+	}
+	err := swimmerService.UpdateSwimmer(request.ID, request.Name, request.Age)
+	if err != nil {
+		http.Error(w, "Failed to update swimmer", http.StatusInternalServerError)
+		return
+	}
+	w.WriteHeader(http.StatusNoContent)
+}
