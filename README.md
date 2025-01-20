@@ -16,31 +16,29 @@ curl localhost:8080/swimmers | jq
 
 ### Todo:
 - [x] Create MVP with inmemory DB
-- [ ] Add controller for update function
-- [ ] Add a repository layer for a SQL db
-- [ ] Make serverless with lambda and aurora db
+- [x] Add controller for update function
+- [x] Add a repository for DynamoDB
+- [ ] Full CRUD
+- [ ] Make serverless with lambda and DynamoDB
+- [ ] Add tests
+- [ ] Add CI/CD pipeline
+- [ ] Add authentication
+- ...
 
-### Tables
-#### Swimmers
+## DynamoDB Table Schema `SwimmersAndSessions`
 
-| Field Name | Type        | Description                            |
-|------------|-------------|----------------------------------------|
-| `ID`       | `string`    | Unique identifier for the swimmer.     |
-| `Name`     | `string`    | Full name of the swimmer.              |
-| `Age`      | `int`       | Age of the swimmer.                    |
-| `CreatedAt`| `time.Time` | Timestamp when the swimmer was created.|
-| `IsActive` | `bool`      | Indicates if the swimmer is active.    |
-
-#### Sessions
-
-| Field Name | Type        | Description                                   |
-|------------|-------------|-----------------------------------------------|
-| `ID`       | `string`    | Unique identifier for the session.           |
-| `SwimmerID`| `string`    | Foreign key linking to the swimmer's `ID`.    |
-| `Date`     | `time.Time` | Date of the session in `time.Time`.           |
-| `Distance` | `int`       | Total distance swam in meters.               |
-| `Duration` | `int`       | Total duration of the session in minutes.     |
-| `Intensity`| `string`    | Intensity level (e.g., "low", "moderate").    |
-| `Style`    | `string`    | Swimming style (e.g., "freestyle").           |
-| `Notes`    | `string`    | Additional notes about the session.           |
+| Attribute Name       | Type      | Key Type        | Description                                                       |
+|----------------------|-----------|-----------------|-------------------------------------------------------------------|
+| `PK`                | `String`  | Partition Key   | Partition key, `SWIMMER#<SwimmerID>`. |
+| `SK`                | `String`  | Sort Key        | Sort key, either `PROFILE` for swimmer or `SESSION#<SessionID>` for session. |
+| `Name`              | `String`  | Attribute       | Name of the swimmer (for swimmer profiles).                      |
+| `Age`               | `Number`  | Attribute       | Age of the swimmer (for swimmer profiles).                       |
+| `CreatedAt`         | `String`  | Attribute       | ISO 8601 timestamp of swimmer profile creation.                  |
+| `IsActive`          | `Boolean` | Attribute       | Whether the swimmer profile is active.                           |
+| `Date`              | `String`  | Attribute       | ISO 8601 date of the session.                                    |
+| `Distance`          | `Number`  | Attribute       | Total distance swum during the session (in meters).              |
+| `Duration`          | `Number`  | Attribute       | Duration of the session (in minutes).                            |
+| `Intensity`         | `String`  | Attribute       | Intensity level of the session (e.g., "low", "moderate", "high").|
+| `Style`             | `String`  | Attribute       | Swimming style (e.g., "freestyle", "butterfly").                 |
+| `Notes`             | `String`  | Attribute       | Additional notes about the session.                              |
 
