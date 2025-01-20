@@ -1,4 +1,5 @@
 curl localhost:8080/swimmers/add -H "application/json" -d '{"name": "Lars", "age": 35}'
+curl localhost:3000/swimmers/add -H "application/json" -d '{"name": "Lars", "age": 35}'
 
 curl -X POST http://localhost:8080/sessions/add \
 -H "Content-Type: application/json" \

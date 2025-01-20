@@ -19,7 +19,7 @@ curl localhost:8080/swimmers | jq
 - [x] Add controller for update function
 - [x] Add a repository for DynamoDB
 - [ ] Full CRUD
-- [ ] Make serverless with lambda and DynamoDB
+- [x] Make serverless with lambda and DynamoDB
 - [ ] Add tests
 - [ ] Add CI/CD pipeline
 - [ ] Add authentication
