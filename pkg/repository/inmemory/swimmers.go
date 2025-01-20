@@ -1,6 +1,7 @@
 package inmemory
 
 import (
+	"context"
 	"errors"
 	"sync"
 
@@ -13,7 +14,7 @@ var (
 
 // SwimmerRepository defines CRUD operations for swimmers.
 type SwimmerRepository interface {
-	AddSwimmer(swimmer models.Swimmer) error
+	AddSwimmer(ctx context.Context, swimmer models.Swimmer) error
 	GetSwimmerByID(id string) (*models.Swimmer, error)
 	UpdateSwimmer(swimmer models.Swimmer) error
 	DeleteSwimmer(id string) error
@@ -34,7 +35,7 @@ func NewInMemorySwimmerRepository() *InMemorySwimmerRepository {
 }
 
 // AddSwimmer adds a swimmer to the repository.
-func (r *InMemorySwimmerRepository) AddSwimmer(swimmer models.Swimmer) error {
+func (r *InMemorySwimmerRepository) AddSwimmer(ctx context.Context, swimmer models.Swimmer) error {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 	r.swimmers = append(r.swimmers, swimmer)

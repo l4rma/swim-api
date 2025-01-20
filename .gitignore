@@ -24,3 +24,18 @@ go.work.sum
 # env file
 .env
 bootstrap
+
+terraform.tfstate*
+*.zip
+.terraform*
+.terraform/*
+*.iml
+*.ipr
+*.iws
+.idea/
+/build/
+/dist/
+/out/
+.aws-sam
+.aws-sam-iacs
+

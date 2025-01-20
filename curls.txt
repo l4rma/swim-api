@@ -1,0 +1,14 @@
+curl localhost:8080/swimmers/add -H "application/json" -d '{"name": "Lars", "age": 35}'
+
+curl -X POST http://localhost:8080/sessions/add \
+-H "Content-Type: application/json" \
+-d '{
+  "swimmer_id": "",
+  "date": "2025.01.19",
+  "distance": 1500,
+  "duration": 30,
+  "intensity": "moderate",
+  "style": "freestyle",
+  "notes": "Morning swim"
+}'
+
