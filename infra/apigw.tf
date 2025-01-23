@@ -4,16 +4,25 @@ resource "aws_api_gateway_rest_api" "api_gw" {
   description = "An API to record swimming sessions"
 }
 
-resource "aws_api_gateway_resource" "add_swimmer" {
+# /swimmers
+resource "aws_api_gateway_resource" "swimmers" {
   rest_api_id = aws_api_gateway_rest_api.api_gw.id
   parent_id   = aws_api_gateway_rest_api.api_gw.root_resource_id
-  path_part   = "swimmers/add"
+  path_part   = "swimmers"
 }
 
+# /swimmers/add
+resource "aws_api_gateway_resource" "add_swimmer" {
+  rest_api_id = aws_api_gateway_rest_api.api_gw.id
+  parent_id   = aws_api_gateway_resource.swimmers.id
+  path_part   = "add"
+}
+
+# /swimmers/find
 resource "aws_api_gateway_resource" "example_resource" {
   rest_api_id = aws_api_gateway_rest_api.api_gw.id
-  parent_id   = aws_api_gateway_rest_api.api_gw.root_resource_id
-  path_part   = "swimmers/find"
+  parent_id   = aws_api_gateway_resource.swimmers.id
+  path_part   = "find"
 }
 
 resource "aws_api_gateway_method" "post" {

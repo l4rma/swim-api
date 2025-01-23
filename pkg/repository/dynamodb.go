@@ -42,6 +42,7 @@ func NewDynamoDBRepository(tableName string) (SwimmerAndSessionRepository, error
 }
 
 func (repo *DynamoDBRepository) AddSwimmer(ctx context.Context, swimmer models.Swimmer) error {
+	log.Printf("Repo: Adding swimmer: %+v", swimmer)
 	item := map[string]types.AttributeValue{
 		"PK":        &types.AttributeValueMemberS{Value: fmt.Sprintf("SWIMMER#%s", swimmer.ID)},
 		"SK":        &types.AttributeValueMemberS{Value: "PROFILE"},
@@ -57,6 +58,7 @@ func (repo *DynamoDBRepository) AddSwimmer(ctx context.Context, swimmer models.S
 		Item:      item,
 	})
 	if err != nil {
+		log.Printf("Failed to add swimmer to DynamoDB: %v", err)
 		return fmt.Errorf("failed to add swimmer to DynamoDB: %w", err)
 	}
 
