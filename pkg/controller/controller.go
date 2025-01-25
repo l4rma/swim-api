@@ -4,8 +4,6 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/aws/aws-lambda-go/lambda"
-	"github.com/awslabs/aws-lambda-go-api-proxy/httpadapter"
 	"github.com/l4rma/swim-api/pkg/repository"
 	"github.com/l4rma/swim-api/pkg/service"
 )
@@ -13,7 +11,8 @@ import (
 var ()
 
 func HandleRequest() {
-	repo, err := repository.NewDynamoDBRepository("SwimmersAndSessions")
+	dbUrl := "http://localhost:8000"
+	repo, err := repository.NewDynamoDBRepository(dbUrl, "SwimmersAndSessions")
 	if err != nil {
 		log.Fatalf("failed to create DynamoDB repository: %v", err)
 	}
@@ -32,10 +31,10 @@ func HandleRequest() {
 	// http.HandleFunc("/sessions/find", h.FindSessionByID) // GET
 
 	// Run server locally
-	// port := ":8080"
-	// log.Printf("Starting server on localhost%s", port)
-	// log.Fatal(http.ListenAndServe(port, nil))
+	port := ":8080"
+	log.Printf("Starting server on localhost%s", port)
+	log.Fatal(http.ListenAndServe(port, nil))
 
 	// Run as lambda function
-	lambda.Start(httpadapter.New(http.DefaultServeMux).ProxyWithContext)
+	// lambda.Start(httpadapter.New(http.DefaultServeMux).ProxyWithContext)
 }
