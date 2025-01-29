@@ -1,4 +1,4 @@
-# apigw.tf
+# API Gateway
 resource "aws_api_gateway_rest_api" "api_gw" {
   name        = "swim-api"
   description = "An API to record swimming sessions"
@@ -11,6 +11,23 @@ resource "aws_api_gateway_resource" "swimmers" {
   path_part   = "swimmers"
 }
 
+resource "aws_api_gateway_method" "swimmers" {
+  rest_api_id   = aws_api_gateway_rest_api.api_gw.id
+  resource_id   = aws_api_gateway_resource.swimmers.id
+  http_method   = "GET"
+  authorization = "NONE"
+}
+
+resource "aws_api_gateway_integration" "swimmers" {
+  rest_api_id             = aws_api_gateway_rest_api.api_gw.id
+  resource_id             = aws_api_gateway_resource.swimmers.id
+  http_method             = aws_api_gateway_method.swimmers.http_method
+  integration_http_method = "POST"
+  type                    = "AWS_PROXY"
+  uri                     = aws_lambda_function.my_lambda.invoke_arn
+}
+
+
 # /swimmers/add
 resource "aws_api_gateway_resource" "add_swimmer" {
   rest_api_id = aws_api_gateway_rest_api.api_gw.id
@@ -18,23 +35,33 @@ resource "aws_api_gateway_resource" "add_swimmer" {
   path_part   = "add"
 }
 
-# /swimmers/find
-resource "aws_api_gateway_resource" "example_resource" {
-  rest_api_id = aws_api_gateway_rest_api.api_gw.id
-  parent_id   = aws_api_gateway_resource.swimmers.id
-  path_part   = "find"
-}
-
-resource "aws_api_gateway_method" "post" {
+resource "aws_api_gateway_method" "add_swimmer" {
   rest_api_id   = aws_api_gateway_rest_api.api_gw.id
   resource_id   = aws_api_gateway_resource.add_swimmer.id
   http_method   = "POST"
   authorization = "NONE"
 }
+ 
+resource "aws_api_gateway_integration" "add_swimmer" {
+  rest_api_id             = aws_api_gateway_rest_api.api_gw.id
+  resource_id             = aws_api_gateway_resource.add_swimmer.id
+  http_method             = aws_api_gateway_method.add_swimmer.http_method
+  integration_http_method = "POST"
+  type                    = "AWS_PROXY"
+  uri                     = aws_lambda_function.my_lambda.invoke_arn
+}
 
-resource "aws_api_gateway_method" "get" {
+# /swimmers/find
+resource "aws_api_gateway_resource" "find_swimmer" {
+  rest_api_id = aws_api_gateway_rest_api.api_gw.id
+  parent_id   = aws_api_gateway_resource.swimmers.id
+  path_part   = "find"
+}
+
+
+resource "aws_api_gateway_method" "find_swimmer" {
   rest_api_id   = aws_api_gateway_rest_api.api_gw.id
-  resource_id   = aws_api_gateway_resource.example_resource.id
+  resource_id   = aws_api_gateway_resource.find_swimmer.id
   http_method   = "GET"
   authorization = "NONE"
 
@@ -43,6 +70,47 @@ resource "aws_api_gateway_method" "get" {
       }
 }
 
+resource "aws_api_gateway_integration" "find_swimmer" {
+  rest_api_id             = aws_api_gateway_rest_api.api_gw.id
+  resource_id             = aws_api_gateway_resource.find_swimmer.id
+  http_method             = aws_api_gateway_method.find_swimmer.http_method
+  integration_http_method = "POST"
+  type                    = "AWS_PROXY"
+  uri                     = aws_lambda_function.my_lambda.invoke_arn
+}
+
+# /sessions
+resource "aws_api_gateway_resource" "sessions" {
+  rest_api_id = aws_api_gateway_rest_api.api_gw.id
+  parent_id   = aws_api_gateway_rest_api.api_gw.root_resource_id
+  path_part   = "sessions"
+}
+
+# /sessions/add
+resource "aws_api_gateway_resource" "add_session" {
+  rest_api_id = aws_api_gateway_rest_api.api_gw.id
+  parent_id   = aws_api_gateway_resource.sessions.id
+  path_part   = "add"
+}
+
+resource "aws_api_gateway_method" "add_session" {
+  rest_api_id   = aws_api_gateway_rest_api.api_gw.id
+  resource_id   = aws_api_gateway_resource.add_session.id
+  http_method   = "POST"
+  authorization = "NONE"
+}
+ 
+resource "aws_api_gateway_integration" "add_session" {
+  rest_api_id             = aws_api_gateway_rest_api.api_gw.id
+  resource_id             = aws_api_gateway_resource.add_session.id
+  http_method             = aws_api_gateway_method.add_session.http_method
+  integration_http_method = "POST"
+  type                    = "AWS_PROXY"
+  uri                     = aws_lambda_function.my_lambda.invoke_arn
+}
+
+
+# Lambda permission
 resource "aws_lambda_permission" "apigw" {
   statement_id  = "AllowAPIGatewayInvoke"
   action        = "lambda:InvokeFunction"
@@ -50,27 +118,9 @@ resource "aws_lambda_permission" "apigw" {
   principal     = "apigateway.amazonaws.com"
   source_arn    = "${aws_api_gateway_rest_api.api_gw.execution_arn}/*/*/*"
 }
- 
-resource "aws_api_gateway_integration" "example_integration" {
-  rest_api_id             = aws_api_gateway_rest_api.api_gw.id
-  resource_id             = aws_api_gateway_resource.add_swimmer.id
-  http_method             = aws_api_gateway_method.post.http_method
-  integration_http_method = "POST"
-  type                    = "AWS_PROXY"
-  uri                     = aws_lambda_function.my_lambda.invoke_arn
-}
-
-resource "aws_api_gateway_integration" "get_integration" {
-  rest_api_id             = aws_api_gateway_rest_api.api_gw.id
-  resource_id             = aws_api_gateway_resource.example_resource.id
-  http_method             = aws_api_gateway_method.get.http_method
-  integration_http_method = "POST"
-  type                    = "AWS_PROXY"
-  uri                     = aws_lambda_function.my_lambda.invoke_arn
-}
 
 resource "aws_api_gateway_deployment" "example_deployment" {
-  depends_on  = [aws_api_gateway_integration.example_integration, aws_api_gateway_integration.get_integration]
+  depends_on  = [aws_api_gateway_integration.add_swimmer, aws_api_gateway_integration.find_swimmer]
   rest_api_id = aws_api_gateway_rest_api.api_gw.id
 }
 

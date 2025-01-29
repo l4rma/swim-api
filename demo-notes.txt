@@ -1,5 +1,8 @@
 # Cheat sheet with commands and queries for project demo
 
+# Start the local DynamoDB instance
+docker-compose up
+
 # Create a table in DynamoDB
 aws dynamodb create-table \
     --table-name SwimmersAndSessions \
@@ -15,13 +18,13 @@ aws dynamodb create-table \
 	--endpoint-url http://localhost:8000
 
 # Add a swimmer to the database
-curl localhost:8080/swimmers/add -d '{"name": "Lars Magelssen", "age": 35}' -H "Content-Type: application/json"
+curl localhost:3000/swimmers/add -d '{"name": "Lars Magelssen", "age": 35}' -H "Content-Type: application/json"
 
 # Add a session to the database
-curl -X POST https://your-api-endpoint/default/sessions/add \
+curl -X POST http://localhost:3000/sessions/add \
 -H "Content-Type: application/json" \
 -d '{
-  "swimmer_id": "<swimmer_id>",
+  "swimmer_id": "",
   "date": "2025.01.19",
   "distance": 1000,
   "duration": 30,
@@ -29,6 +32,12 @@ curl -X POST https://your-api-endpoint/default/sessions/add \
   "style": "freestyle",
   "notes": "Morning swim"
 }'
+
+# Get swimmer by ID
+curl "localhost:3000/swimmers/find?id="
+
+# Find all swimmers
+curl localhost:3000/swimmers
 
 # List all items from database
 aws dynamodb scan --table-name SwimmersAndSessions --endpoint-url http://localhost:8000
