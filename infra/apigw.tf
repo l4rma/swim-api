@@ -119,12 +119,28 @@ resource "aws_lambda_permission" "apigw" {
   source_arn    = "${aws_api_gateway_rest_api.api_gw.execution_arn}/*/*/*"
 }
 
-resource "aws_api_gateway_deployment" "example_deployment" {
+resource "aws_api_gateway_deployment" "dev" {
   depends_on  = [aws_api_gateway_integration.add_swimmer, aws_api_gateway_integration.find_swimmer]
   rest_api_id = aws_api_gateway_rest_api.api_gw.id
 }
 
+resource "aws_api_gateway_stage" "dev" {
+  deployment_id = aws_api_gateway_deployment.dev.id
+  rest_api_id   = aws_api_gateway_rest_api.api_gw.id
+  stage_name    = "swim-api"
+}
+
+resource "aws_api_gateway_method_settings" "dev" {
+  rest_api_id = aws_api_gateway_rest_api.api_gw.id
+  stage_name  = aws_api_gateway_stage.dev.stage_name
+  method_path = "*/*"
+
+  settings {
+    metrics_enabled = true
+  }
+}
+
 output "api_endpoint" {
-  value = aws_api_gateway_deployment.example_deployment.invoke_url
+  value = aws_api_gateway_stage.dev.invoke_url
 }
 
