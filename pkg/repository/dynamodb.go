@@ -29,12 +29,31 @@ type DynamoDBRepository struct {
 }
 
 // NewDynamoDBRepository initializes a new DynamoDB repository.
-func NewDynamoDBRepository(tableName string) (SwimmerAndSessionRepository, error) {
-	cfg, err := config.LoadDefaultConfig(context.TODO())
-	if err != nil {
-		return nil, fmt.Errorf("failed to load AWS config: %w", err)
+func NewDynamoDBRepository(envDbLocalUrl string, tableName string) (SwimmerAndSessionRepository, error) {
+	var cfg aws.Config
+	var err error
+	if envDbLocalUrl != "" {
+		cfg, err = config.LoadDefaultConfig(
+			context.TODO(),
+			config.WithEndpointResolverWithOptions(
+				aws.EndpointResolverWithOptionsFunc(
+					func(service, region string, options ...interface{}) (aws.Endpoint, error) {
+						return aws.Endpoint{
+							URL: envDbLocalUrl,
+						}, nil
+					},
+				),
+			),
+		)
+		if err != nil {
+			return nil, fmt.Errorf("failed to load AWS config: %w", err)
+		}
+	} else {
+		cfg, err = config.LoadDefaultConfig(context.TODO())
+		if err != nil {
+			return nil, fmt.Errorf("failed to load AWS config: %w", err)
+		}
 	}
-
 	return &DynamoDBRepository{
 		client:    dynamodb.NewFromConfig(cfg),
 		tableName: tableName,
@@ -42,6 +61,7 @@ func NewDynamoDBRepository(tableName string) (SwimmerAndSessionRepository, error
 }
 
 func (repo *DynamoDBRepository) AddSwimmer(ctx context.Context, swimmer models.Swimmer) error {
+	log.Printf("Repo: Adding swimmer: %+v", swimmer)
 	item := map[string]types.AttributeValue{
 		"PK":        &types.AttributeValueMemberS{Value: fmt.Sprintf("SWIMMER#%s", swimmer.ID)},
 		"SK":        &types.AttributeValueMemberS{Value: "PROFILE"},
@@ -57,6 +77,7 @@ func (repo *DynamoDBRepository) AddSwimmer(ctx context.Context, swimmer models.S
 		Item:      item,
 	})
 	if err != nil {
+		log.Printf("Failed to add swimmer to DynamoDB: %v", err)
 		return fmt.Errorf("failed to add swimmer to DynamoDB: %w", err)
 	}
 

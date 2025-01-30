@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"fmt"
+	"log"
 	"strconv"
 	"time"
 
@@ -41,6 +42,7 @@ func (s *swimmerServiceImpl) AddSwimmer(ctx context.Context, name string, age in
 		IsActive:  true,
 	}
 	if err := r.AddSwimmer(ctx, swimmer); err != nil {
+		log.Printf("Failed to add swimmer: %v", err)
 		return nil, fmt.Errorf("failed to add swimmer: %w", err)
 	}
 	return &swimmer, nil
