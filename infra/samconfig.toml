@@ -1,0 +1,10 @@
+version = 0.1
+
+[default.global.parameters]
+stack_name = "swim-api"
+
+[default.build.parameters] 
+hook_name = "terraform"
+
+[default.local_start_api.parameters]
+docker-network = "dynamodb-local"

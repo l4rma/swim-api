@@ -41,3 +41,7 @@ curl localhost:3000/swimmers
 
 # List all items from database
 aws dynamodb scan --table-name SwimmersAndSessions --endpoint-url http://localhost:8000
+
+# Send an event to the lambda function
+sam local invoke aws_lambda_function.my_lambda -e event.json --docker-network dynamodb-local
+

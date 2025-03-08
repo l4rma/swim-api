@@ -1,0 +1,5 @@
+{
+  "body": "{\"name\": \"Lars Magelssen\", \"age\": 35}",
+  "path": "/swimmers/add",
+  "httpMethod": "POST"
+}
