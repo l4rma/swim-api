@@ -157,7 +157,10 @@ func (repo *DynamoDBRepository) UpdateSwimmer(ctx context.Context, swimmer model
 	}
 
 	// Prepare the update expression
-	updateExpression := "SET Name = :name, Age = :age, IsActive = :is_active"
+	updateExpression := "SET #nm = :name, Age = :age, IsActive = :is_active"
+	expressionAttributeNames := map[string]string{
+		"#nm": "Name",
+	}
 	expressionAttributeValues := map[string]types.AttributeValue{
 		":name":      &types.AttributeValueMemberS{Value: swimmer.Name},
 		":age":       &types.AttributeValueMemberN{Value: fmt.Sprintf("%d", swimmer.Age)},
@@ -170,8 +173,10 @@ func (repo *DynamoDBRepository) UpdateSwimmer(ctx context.Context, swimmer model
 		Key:                       profileKey,
 		UpdateExpression:          aws.String(updateExpression),
 		ExpressionAttributeValues: expressionAttributeValues,
+		ExpressionAttributeNames:  expressionAttributeNames,
 	})
 	if err != nil {
+		log.Printf("Failed to update swimmer: %v", err)
 		return fmt.Errorf("failed to update swimmer: %w", err)
 	}
 

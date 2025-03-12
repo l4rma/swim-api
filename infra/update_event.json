@@ -1,0 +1,5 @@
+{
+  "body": "{\"id\": \"ec595d89-3c93-425e-91f5-05921d61c6a7\", \"name\": \"Lars Magelssen Updated\", \"age\": \"29\"}",
+  "path": "/swimmers/update",
+  "httpMethod": "PUT"
+}

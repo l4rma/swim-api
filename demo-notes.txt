@@ -44,4 +44,6 @@ aws dynamodb scan --table-name SwimmersAndSessions --endpoint-url http://localho
 
 # Send an event to the lambda function
 sam local invoke aws_lambda_function.my_lambda -e event.json --docker-network dynamodb-local
-
+sam local invoke aws_lambda_function.create_swimmer -e event.json --docker-network dynamodb-local
+sam local invoke aws_lambda_function.list_swimmers --docker-network dynamodb-local
+sam local invoke aws_lambda_function.update_swimmer -e update_event.json --docker-network dynamodb-local

@@ -1,0 +1,27 @@
+{
+    "Items": [
+        {
+            "SK": {
+                "S": "PROFILE"
+            },
+            "PK": {
+                "S": "SWIMMER#6f1a0a85-e4af-4341-b0dd-9609192266f8"
+            },
+            "IsActive": {
+                "BOOL": true
+            },
+            "Age": {
+                "N": "35"
+            },
+            "CreatedAt": {
+                "S": "2025-03-10T06:34:49Z"
+            },
+            "Name": {
+                "S": "Lars Magelssen"
+            }
+        }
+    ],
+    "Count": 1,
+    "ScannedCount": 1,
+    "ConsumedCapacity": null
+}

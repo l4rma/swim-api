@@ -1,8 +1,12 @@
 BINARY_NAME=bootstrap
 APP=cmd/main.go
+APIPATH=cmd/api/v2
 
 build:
 	@GOARCH=amd64 GOOS=linux go build -tags lambda.norpc -o ${BINARY_NAME} ${APP}
+	@GOARCH=amd64 GOOS=linux CGO_ENABLED=0 go build -tags lambda.norpc -o bin/create/bootstrap ${APIPATH}/swimmers/create/main.go
+	@GOARCH=amd64 GOOS=linux CGO_ENABLED=0 go build -tags lambda.norpc -o bin/list/bootstrap ${APIPATH}/swimmers/list/main.go
+	@GOARCH=amd64 GOOS=linux CGO_ENABLED=0 go build -tags lambda.norpc -o bin/update/bootstrap ${APIPATH}/swimmers/update/main.go
 
 run: build
 	@./${BINARY_NAME}
@@ -27,6 +31,7 @@ sam: build ddb
 
 clean:
 	@go clean
+	@rm -r bin/*
+	@rm infra/*.zip
 	@rm bootstrap
-	@rm infra/lambda_function_payload.zip
 

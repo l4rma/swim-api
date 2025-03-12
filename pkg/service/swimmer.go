@@ -72,6 +72,7 @@ func (s *swimmerServiceImpl) GetSwimmerById(ctx context.Context, swimmerID strin
 func (s *swimmerServiceImpl) UpdateSwimmer(ctx context.Context, id string, name string, age string) error {
 	swimmer, err := r.GetSwimmerProfile(ctx, id)
 	if err != nil {
+		log.Printf("Failed to retrieve swimmer profile: %v", err)
 		return fmt.Errorf("failed to retrieve swimmer profile: %w", err)
 	}
 
@@ -81,12 +82,14 @@ func (s *swimmerServiceImpl) UpdateSwimmer(ctx context.Context, id string, name 
 	if age != "" {
 		swimmer.Age, err = strconv.Atoi(age)
 		if err != nil {
+			log.Printf("Failed to parse age: %v", err)
 			return fmt.Errorf("failed to parse age: %w", err)
 		}
 	}
 
 	err = r.UpdateSwimmer(ctx, *swimmer)
 	if err != nil {
+		log.Printf("Failed to update swimmer: %v", err)
 		return fmt.Errorf("failed to update swimmer: %w", err)
 	}
 
