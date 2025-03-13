@@ -24,7 +24,7 @@ resource "aws_lambda_function" "create_swimmer" {
   filename          = "${local.create_lambda_filename}"
   runtime           = "provided.al2023"
   source_code_hash  = data.archive_file.create_swimmer.output_base64sha256
-  role              = aws_iam_role.iam_for_lambda.arn
+  role              = aws_iam_role.create_swimmer_lambda.arn
 }
 
 resource "null_resource" "sam_metadata_aws_lambda_function_create_swimmer" {
@@ -50,7 +50,7 @@ resource "aws_lambda_function" "list_swimmers" {
   filename          = "${local.list_lambda_filename}"
   runtime           = "provided.al2023"
   source_code_hash  = data.archive_file.list_swimmers.output_base64sha256
-  role              = aws_iam_role.iam_for_lambda.arn
+  role              = aws_iam_role.list_swimmers_lambda.arn
 }
 
 resource "null_resource" "sam_metadata_aws_lambda_function_list_swimmers" {
@@ -76,7 +76,7 @@ resource "aws_lambda_function" "update_swimmer" {
   filename          = "${local.update_lambda_filename}"
   runtime           = "provided.al2023"
   source_code_hash  = data.archive_file.update_swimmer.output_base64sha256
-  role              = aws_iam_role.iam_for_lambda.arn
+  role              = aws_iam_role.update_swimmer_lambda.arn
 }
 
 resource "null_resource" "sam_metadata_aws_lambda_function_update_swimmer" {
@@ -102,7 +102,7 @@ resource "aws_lambda_function" "delete_swimmer" {
   filename          = "${local.delete_lambda_filename}"
   runtime           = "provided.al2023"
   source_code_hash  = data.archive_file.delete_swimmer.output_base64sha256
-  role              = aws_iam_role.iam_for_lambda.arn
+  role              = aws_iam_role.delete_swimmer_lambda.arn
 }
 
 resource "null_resource" "sam_metadata_aws_lambda_function_delete_swimmer" {
