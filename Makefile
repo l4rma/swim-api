@@ -3,16 +3,23 @@ APP=cmd/main.go
 APIPATH=cmd/api/v2
 
 build:
-	@GOARCH=amd64 GOOS=linux go build -tags lambda.norpc -o ${BINARY_NAME} ${APP}
-	@GOARCH=amd64 GOOS=linux CGO_ENABLED=0 go build -tags lambda.norpc -o bin/create/bootstrap ${APIPATH}/swimmers/create/main.go
-	@GOARCH=amd64 GOOS=linux CGO_ENABLED=0 go build -tags lambda.norpc -o bin/list/bootstrap ${APIPATH}/swimmers/list/main.go
-	@GOARCH=amd64 GOOS=linux CGO_ENABLED=0 go build -tags lambda.norpc -o bin/update/bootstrap ${APIPATH}/swimmers/update/main.go
+	@echo "Building create lambda"
+	@GOARCH=amd64 GOOS=linux go build -tags lambda.norpc -o bin/create/${BINARY_NAME} ${APIPATH}/swimmers/create/main.go
+	@echo "Building list lambda"
+	@GOARCH=amd64 GOOS=linux go build -tags lambda.norpc -o bin/list/${BINARY_NAME} ${APIPATH}/swimmers/list/main.go
+	@echo "Building update lambda"
+	@GOARCH=amd64 GOOS=linux go build -tags lambda.norpc -o bin/update/${BINARY_NAME} ${APIPATH}/swimmers/update/main.go
+	@echo "Building delete lambda"
+	@GOARCH=amd64 GOOS=linux go build -tags lambda.norpc -o bin/delete/${BINARY_NAME} ${APIPATH}/swimmers/delete/main.go
+	@echo "Build complete"
 
 run: build
 	@./${BINARY_NAME}
 
-ddb:
+docker:
 	@docker-compose up -d
+
+table: docker
 	@aws dynamodb create-table \
 	    --table-name SwimmersAndSessions \
 	    --attribute-definitions \
@@ -26,12 +33,11 @@ ddb:
 	    --table-class STANDARD \
 		--endpoint-url http://localhost:8000
 
-sam: build ddb
+sam: build table
 	@cd infra && sam build --hook-name terraform && sam local start-api --docker-network dynamodb-local
 
 clean:
-	@go clean
-	@rm -r bin/*
-	@rm infra/*.zip
-	@rm bootstrap
+	go clean
+	rm -rf bin/*
+	rm -f infra/*.zip
 

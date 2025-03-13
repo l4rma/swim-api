@@ -5,6 +5,8 @@ locals {
   list_lambda_filename = "list.zip"
   update_lambda_src_path = "../cmd/api/v2/swimmers/update/"
   update_lambda_filename = "update.zip"
+  delete_lambda_src_path = "../cmd/api/v2/swimmers/delete/"
+  delete_lambda_filename = "delete.zip"
   lambdas_building_path = "../bin"
 }
 
@@ -86,3 +88,28 @@ resource "null_resource" "sam_metadata_aws_lambda_function_update_swimmer" {
     }
 }
 
+##### Delete Swimmer Lambda #####
+data "archive_file" "delete_swimmer" {
+  type        = "zip"
+  source_file = "${local.lambdas_building_path}/delete/bootstrap"
+  output_path = "${local.delete_lambda_filename}"
+}
+
+resource "aws_lambda_function" "delete_swimmer" {
+  function_name     = "DeleteSwimmer"
+  description       = "Delete a swimmer from the database"
+  handler           = "bootstrap"
+  filename          = "${local.delete_lambda_filename}"
+  runtime           = "provided.al2023"
+  source_code_hash  = data.archive_file.delete_swimmer.output_base64sha256
+  role              = aws_iam_role.iam_for_lambda.arn
+}
+
+resource "null_resource" "sam_metadata_aws_lambda_function_delete_swimmer" {
+    triggers = {
+        resource_name = "aws_lambda_function.delete_swimmer"
+        resource_type = "ZIP_LAMBDA_FUNCTION"
+        original_source_code = "${local.delete_lambda_src_path}"
+        built_output_path = "./${local.delete_lambda_filename}"
+    }
+}
