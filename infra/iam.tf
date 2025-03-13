@@ -33,6 +33,7 @@ data "aws_iam_policy_document" "lambda_policies" {
     actions = [
       "dynamodb:PutItem",
       "dynamodb:GetItem",
+      "dynamodb:UpdateItem",
       "dynamodb:Scan"
     ]
     resources = [
@@ -61,6 +62,7 @@ resource "aws_lambda_permission" "api_gateway" {
   for_each = {
     create = aws_lambda_function.create_swimmer.arn
     read   = aws_lambda_function.list_swimmers.arn
+    update   = aws_lambda_function.update_swimmer.arn
   }
 
   statement_id  = "AllowAPIGatewayInvoke-${each.key}"

@@ -39,4 +39,4 @@ terraform.tfstate*
 .aws-sam
 .aws-sam-iacs
 docker/
-
+events/
