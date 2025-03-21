@@ -50,6 +50,7 @@ func (s *swimmerServiceImpl) AddSwimmer(ctx context.Context, name string, age in
 
 func (s *swimmerServiceImpl) GetSwimmerById(ctx context.Context, swimmerID string) (*models.SwimmerSummary, error) {
 	swimmer, err := r.GetSwimmerProfile(ctx, swimmerID)
+	log.Printf("Service: Found swimmer: %+v", swimmer)
 
 	if err != nil {
 		return nil, fmt.Errorf("failed to retrieve swimmer profile: %w", err)
@@ -59,6 +60,7 @@ func (s *swimmerServiceImpl) GetSwimmerById(ctx context.Context, swimmerID strin
 	if err != nil {
 		return nil, fmt.Errorf("failed to retrieve swimmer sessions: %w", err)
 	}
+	log.Printf("Service: Found session summary: %+v", sessionSummary)
 
 	// Step 3: Combine the results into a SwimmerSummary
 	return &models.SwimmerSummary{

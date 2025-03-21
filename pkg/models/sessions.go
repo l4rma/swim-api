@@ -1,6 +1,10 @@
 package models
 
-import "time"
+import (
+	"encoding/json"
+	"log"
+	"time"
+)
 
 type Session struct {
 	ID        string        `json:"id"`         // Unique identifier for the session
@@ -11,4 +15,12 @@ type Session struct {
 	Intensity string        `json:"intensity"`  // Intensity level (e.g., "low", "moderate", "high")
 	Style     string        `json:"style"`      // Swimming style (e.g., "freestyle", "butterfly", "mixed")
 	Notes     string        `json:"notes"`      // Additional notes about the session
+}
+
+func (s Session) ToString() string {
+	jsonData, err := json.Marshal(s)
+	if err != nil {
+		log.Fatalf("Error marshalling session to JSON %v", err)
+	}
+	return string(jsonData)
 }

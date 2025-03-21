@@ -3,14 +3,18 @@ APP=cmd/main.go
 APIPATH=cmd/api/v2
 
 build:
-	@echo "Building create lambda"
+	@echo "Building create swimmer lambda"
 	@GOARCH=amd64 GOOS=linux go build -tags lambda.norpc -o bin/create/${BINARY_NAME} ${APIPATH}/swimmers/create/main.go
-	@echo "Building list lambda"
+	@echo "Building list swimmer lambda"
 	@GOARCH=amd64 GOOS=linux go build -tags lambda.norpc -o bin/list/${BINARY_NAME} ${APIPATH}/swimmers/list/main.go
-	@echo "Building update lambda"
+	@echo "Building find swimmer lambda"
+	@GOARCH=amd64 GOOS=linux go build -tags lambda.norpc -o bin/find/${BINARY_NAME} ${APIPATH}/swimmers/find/main.go
+	@echo "Building update swimmer lambda"
 	@GOARCH=amd64 GOOS=linux go build -tags lambda.norpc -o bin/update/${BINARY_NAME} ${APIPATH}/swimmers/update/main.go
-	@echo "Building delete lambda"
+	@echo "Building delete swimmer lambda"
 	@GOARCH=amd64 GOOS=linux go build -tags lambda.norpc -o bin/delete/${BINARY_NAME} ${APIPATH}/swimmers/delete/main.go
+	@echo "Building create session lambda"
+	@GOARCH=amd64 GOOS=linux go build -tags lambda.norpc -o bin/sessions/create/${BINARY_NAME} ${APIPATH}/sessions/create/main.go
 	@echo "Build complete"
 
 run: build

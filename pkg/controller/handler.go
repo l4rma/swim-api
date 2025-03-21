@@ -128,16 +128,19 @@ func (h *Handler) AddSession(w http.ResponseWriter, r *http.Request) {
 		Notes     string `json:"notes"`
 	}
 	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
+		log.Printf("Failed to decode request: %v", err)
 		http.Error(w, "Invalid input", http.StatusBadRequest)
 		return
 	}
 	parsedDate, err := time.Parse("2006.01.02", request.Date)
 	if err != nil {
+		log.Printf("Failed to parse date: %v", err)
 		http.Error(w, "Invalid date format, expected YYYY.MM.DD", http.StatusBadRequest)
 		return
 	}
 	session, err := sessionService.AddSession(ctx, request.SwimmerID, parsedDate, request.Distance, request.Duration, request.Intensity, request.Style, request.Notes)
 	if err != nil {
+		log.Printf("Handler: Failed to add session: %v", err)
 		http.Error(w, "Failed to add session", http.StatusInternalServerError)
 		return
 	}

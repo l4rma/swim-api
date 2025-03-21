@@ -27,20 +27,18 @@ func init() {
 }
 
 func handler(ctx context.Context, req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-	var request struct {
-		Name string `json:"name"`
-		Age  int    `json:"age"`
+	id := req.QueryStringParameters["id"]
+	if id == "" {
+		log.Println("Error: Missing swimmer ID")
+		return events.APIGatewayProxyResponse{StatusCode: 500, Body: "Failed to list swimmers"}, nil
 	}
-	if err := json.Unmarshal([]byte(req.Body), &request); err != nil {
-		log.Printf("Failed to unmarshal event: %v", err)
-		return events.APIGatewayProxyResponse{StatusCode: 500, Body: "Failed to decode json"}, nil
-	}
-	swimmer, err := swimmerService.AddSwimmer(ctx, request.Name, request.Age)
+	swimmer, err := swimmerService.GetSwimmerById(ctx, id)
 	if err != nil {
-		return events.APIGatewayProxyResponse{StatusCode: 500, Body: "Failed to add swimmer"}, nil
+		return events.APIGatewayProxyResponse{StatusCode: 500, Body: "Failed to find swimmer"}, nil
 	}
 
-	return events.APIGatewayProxyResponse{StatusCode: 200, Body: swimmer.ToString()}, nil
+	marshalledSwimmer, err := json.Marshal(swimmer)
+	return events.APIGatewayProxyResponse{StatusCode: 200, Body: string(marshalledSwimmer)}, nil
 }
 
 func main() {

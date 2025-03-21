@@ -16,7 +16,9 @@ var (
 )
 
 func init() {
-	dbUrl := ""
+	dbUrl := "http://dynamodb:8000" // Local DynamoDB
+	//dbUrl := "" // AWS DynamoDB
+
 	repo, err := repository.NewDynamoDBRepository(dbUrl, "SwimmersAndSessions")
 	if err != nil {
 		log.Fatalf("failed to create DynamoDB repository: %v", err)
