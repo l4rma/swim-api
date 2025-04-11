@@ -1,7 +1,7 @@
 # swim-api
 A serverless Rest API written in Go with AWS Lambda and DynamoDB.
 ![aws resources](./serverless-api.png)
- 
+
 ### Dependencies
 - Go version >1.22
 - docker
