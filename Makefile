@@ -20,10 +20,10 @@ build:
 run: build
 	@./${BINARY_NAME}
 
-docker:
+db:
 	@docker-compose up -d
 
-table: docker
+table:
 	@aws dynamodb create-table \
 	    --table-name SwimmersAndSessions \
 	    --attribute-definitions \
@@ -37,8 +37,11 @@ table: docker
 	    --table-class STANDARD \
 		--endpoint-url http://localhost:8000
 
-sam: build table
-	@cd infra && sam build --hook-name terraform && sam local start-api --docker-network dynamodb-local
+sam-build:
+	@cd infra && sam build --hook-name terraform
+
+sam-run:
+	@cd infra && sam local start-api --docker-network dynamodb-local
 
 clean:
 	go clean
