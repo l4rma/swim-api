@@ -2,7 +2,7 @@
 
 ## Start the local DynamoDB instance
 ```bash
-docker-compose up
+docker-compose up -d
 ```
 
 ## Create a table in DynamoDB
@@ -23,6 +23,11 @@ aws dynamodb create-table \
 ## Check table exists
 ```
 aws dynamodb list-tables --endpoint-url http://localhost:8000
+```
+
+## Run API locally
+```bash
+make sam-run
 ```
 
 ## Add a swimmer to the database
