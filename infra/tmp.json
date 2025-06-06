@@ -1,0 +1,79 @@
+{
+    "Items": [
+        {
+            "Intensity": {
+                "S": "easy"
+            },
+            "SK": {
+                "S": "SESSION#b0783038-e6de-4b5e-b3ea-737fc6dfe7de"
+            },
+            "Style": {
+                "S": "freestyle"
+            },
+            "Duration": {
+                "N": "20"
+            },
+            "PK": {
+                "S": "SWIMMER#"
+            },
+            "Date": {
+                "S": "2025-01-22"
+            },
+            "Distance": {
+                "N": "700"
+            },
+            "Notes": {
+                "S": "Morning swim"
+            }
+        },
+        {
+            "Intensity": {
+                "S": "easy"
+            },
+            "SK": {
+                "S": "SESSION#cc594ebd-c670-4b40-8ab7-10237f5db115"
+            },
+            "Style": {
+                "S": "freestyle"
+            },
+            "Duration": {
+                "N": "20"
+            },
+            "PK": {
+                "S": "SWIMMER#"
+            },
+            "Date": {
+                "S": "2025-01-22"
+            },
+            "Distance": {
+                "N": "700"
+            },
+            "Notes": {
+                "S": "Morning swim"
+            }
+        },
+        {
+            "SK": {
+                "S": "PROFILE"
+            },
+            "PK": {
+                "S": "SWIMMER#a56bdaaa-f67f-4269-9922-ac3d20ba4355"
+            },
+            "IsActive": {
+                "BOOL": true
+            },
+            "Age": {
+                "N": "9000"
+            },
+            "Name": {
+                "S": "Ultimate Test"
+            },
+            "CreatedAt": {
+                "S": "2025-03-21T07:30:40Z"
+            }
+        }
+    ],
+    "Count": 3,
+    "ScannedCount": 3,
+    "ConsumedCapacity": null
+}

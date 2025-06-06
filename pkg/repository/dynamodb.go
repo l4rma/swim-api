@@ -118,6 +118,7 @@ func (repo *DynamoDBRepository) GetSwimmerProfile(ctx context.Context, swimmerID
 
 func (repo *DynamoDBRepository) SummarizeSwimmerSessions(ctx context.Context, swimmerID string) (*models.SessionSummary, error) {
 	// Query all sessions for the swimmer
+	log.Printf("DynamoDB Repository: Querying sessions for swimmer: %s", swimmerID)
 	sessionResp, err := repo.client.Query(ctx, &dynamodb.QueryInput{
 		TableName:              aws.String(repo.tableName),
 		KeyConditionExpression: aws.String("PK = :pk AND begins_with(SK, :prefix)"),
@@ -141,6 +142,7 @@ func (repo *DynamoDBRepository) SummarizeSwimmerSessions(ctx context.Context, sw
 		totalDistance += utils.ParseInt(item["Distance"])
 		totalTime += utils.ParseInt(item["Duration"])
 	}
+	log.Printf("DynamoDB Repository: Total sessions: %d, Total distance: %d, Total time: %d", totalSessions, totalDistance, totalTime)
 
 	return &models.SessionSummary{
 		TotalSessions: totalSessions,
@@ -157,7 +159,10 @@ func (repo *DynamoDBRepository) UpdateSwimmer(ctx context.Context, swimmer model
 	}
 
 	// Prepare the update expression
-	updateExpression := "SET Name = :name, Age = :age, IsActive = :is_active"
+	updateExpression := "SET #nm = :name, Age = :age, IsActive = :is_active"
+	expressionAttributeNames := map[string]string{
+		"#nm": "Name",
+	}
 	expressionAttributeValues := map[string]types.AttributeValue{
 		":name":      &types.AttributeValueMemberS{Value: swimmer.Name},
 		":age":       &types.AttributeValueMemberN{Value: fmt.Sprintf("%d", swimmer.Age)},
@@ -170,8 +175,10 @@ func (repo *DynamoDBRepository) UpdateSwimmer(ctx context.Context, swimmer model
 		Key:                       profileKey,
 		UpdateExpression:          aws.String(updateExpression),
 		ExpressionAttributeValues: expressionAttributeValues,
+		ExpressionAttributeNames:  expressionAttributeNames,
 	})
 	if err != nil {
+		log.Printf("Failed to update swimmer: %v", err)
 		return fmt.Errorf("failed to update swimmer: %w", err)
 	}
 
@@ -211,7 +218,7 @@ func (repo *DynamoDBRepository) ListSwimmers(ctx context.Context) ([]models.Swim
 }
 
 func (repo *DynamoDBRepository) AddSession(ctx context.Context, session models.Session) error {
-	log.Printf("Adding session: %+v", session)
+	log.Printf("DynamoDbRepository: Adding session: %+v", session)
 	_, err := repo.client.PutItem(ctx, &dynamodb.PutItemInput{
 		TableName: aws.String(repo.tableName),
 		Item: map[string]types.AttributeValue{
@@ -226,6 +233,7 @@ func (repo *DynamoDBRepository) AddSession(ctx context.Context, session models.S
 		},
 	})
 	if err != nil {
+		log.Printf("DynamoDbRepository: Failed to add session: %+v", err)
 		return fmt.Errorf("failed to add session: %w", err)
 	}
 

@@ -1,5 +1,7 @@
 # swim-api
-A serverless Rest API written in Go with AWS Lambda and DynamoDB.
+A serverless Rest API for recording swimming sessions
+
+written in Go with AWS Gateway, Lambda and DynamoDB.
 ![aws resources](./serverless-api.png)
 
 ### Dependencies
@@ -13,7 +15,10 @@ A serverless Rest API written in Go with AWS Lambda and DynamoDB.
 ### Local testing
 - Clone repository: ``git clone https://github.com/l4rma/swim-api.git``
 - Compile code: ``make build``
-- Run API locally: ``make sam``
+- Run DynamoDB in docker: ``make db``
+- Create db table: ``make table``
+- Build API with sam: ``make sam-build``
+- Run API locally: ``make sam-run``
 
 #### Running with DynamoDB locally with docker
 - Run local dynamoDB: ``docker-compose up -d``
@@ -38,7 +43,7 @@ aws dynamodb create-table \
 #### Example requests
 ```bash
 # Add swimmer
-curl localhost:3000/swimmers/add -H "application/json" -d '{"name":"Lars","age":35}'
+curl localhost:3000/swimmers/add -H "application/json" -d '{"name":"Test Testerson","age":42}'
 # Get all swimmers
 curl localhost:3000/swimmers | jq
 ```
@@ -48,7 +53,7 @@ curl localhost:3000/swimmers | jq
 - [x] Add controller for update function
 - [x] Add a repository for DynamoDB
 - [ ] Add tests
-- [ ] Full CRUD
+- [x] Full CRUD
 - [x] Make serverless with lambda and DynamoDB
 - [x] Run locally with SAM, Terraform and Docker
 - [ ] Add CI/CD pipeline

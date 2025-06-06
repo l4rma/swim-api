@@ -1,0 +1,5 @@
+{
+  "body": "{ \"swimmer_id\": \"123\", \"date\": \"2025.01.19\", \"distance\": 1000, \"duration\": 30, \"intensity\": \"moderate\", \"style\": \"freestyle\", \"notes\": \"Morning swim\" }",
+  "path": "/sessions/add",
+  "httpMethod": "POST"
+}

@@ -50,6 +50,7 @@ func (s *swimmerServiceImpl) AddSwimmer(ctx context.Context, name string, age in
 
 func (s *swimmerServiceImpl) GetSwimmerById(ctx context.Context, swimmerID string) (*models.SwimmerSummary, error) {
 	swimmer, err := r.GetSwimmerProfile(ctx, swimmerID)
+	log.Printf("Service: Found swimmer: %+v", swimmer)
 
 	if err != nil {
 		return nil, fmt.Errorf("failed to retrieve swimmer profile: %w", err)
@@ -59,6 +60,7 @@ func (s *swimmerServiceImpl) GetSwimmerById(ctx context.Context, swimmerID strin
 	if err != nil {
 		return nil, fmt.Errorf("failed to retrieve swimmer sessions: %w", err)
 	}
+	log.Printf("Service: Found session summary: %+v", sessionSummary)
 
 	// Step 3: Combine the results into a SwimmerSummary
 	return &models.SwimmerSummary{
@@ -72,6 +74,7 @@ func (s *swimmerServiceImpl) GetSwimmerById(ctx context.Context, swimmerID strin
 func (s *swimmerServiceImpl) UpdateSwimmer(ctx context.Context, id string, name string, age string) error {
 	swimmer, err := r.GetSwimmerProfile(ctx, id)
 	if err != nil {
+		log.Printf("Failed to retrieve swimmer profile: %v", err)
 		return fmt.Errorf("failed to retrieve swimmer profile: %w", err)
 	}
 
@@ -81,12 +84,14 @@ func (s *swimmerServiceImpl) UpdateSwimmer(ctx context.Context, id string, name 
 	if age != "" {
 		swimmer.Age, err = strconv.Atoi(age)
 		if err != nil {
+			log.Printf("Failed to parse age: %v", err)
 			return fmt.Errorf("failed to parse age: %w", err)
 		}
 	}
 
 	err = r.UpdateSwimmer(ctx, *swimmer)
 	if err != nil {
+		log.Printf("Failed to update swimmer: %v", err)
 		return fmt.Errorf("failed to update swimmer: %w", err)
 	}
 
