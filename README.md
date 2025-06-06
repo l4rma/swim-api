@@ -15,6 +15,9 @@ written in Go with AWS Gateway, Lambda and DynamoDB.
 ### Local testing
 - Clone repository: ``git clone https://github.com/l4rma/swim-api.git``
 - Compile code: ``make build``
+- Run DynamoDB in docker: ``make db``
+- Create db table: ``make table``
+- Build API with sam: ``make sam-build``
 - Run API locally: ``make sam-run``
 
 #### Running with DynamoDB locally with docker
